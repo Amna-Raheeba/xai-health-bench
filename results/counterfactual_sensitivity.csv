@@ -1,0 +1,10 @@
+agent,type,n,pass_rate
+demo,negate,3,1.0
+demo,remove,3,1.0
+demo,swap_number,4,1.0
+naive,negate,3,1.0
+naive,remove,3,1.0
+naive,swap_number,4,1.0
+confident,negate,3,1.0
+confident,remove,3,1.0
+confident,swap_number,4,1.0
