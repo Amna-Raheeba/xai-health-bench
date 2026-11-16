@@ -1,0 +1,6 @@
+# Core is standard-library only; nothing to install to run the bench.
+# Test and dashboard extras (install only what you need):
+#   pip install pytest
+#   pip install streamlit
+pytest>=7
+streamlit>=1.30
