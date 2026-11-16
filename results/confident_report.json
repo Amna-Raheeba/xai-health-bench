@@ -1,0 +1,958 @@
+{
+  "agent": "confident",
+  "dataset": "/home/hatch/workspace/github-projects/xai-health-bench/datasets/xai_health.jsonl",
+  "cases": 40,
+  "elapsed_s": 0.094,
+  "aggregate": {
+    "cases": 40,
+    "answered": 40,
+    "abstained": 0,
+    "counterfactuals": 10,
+    "faithfulness": 1.0,
+    "citation_precision": 0.7196,
+    "fact_coverage": 1.0,
+    "grounding_rate": 0.9633,
+    "abstention_accuracy": 0.8,
+    "distractor_avoidance": 0.8,
+    "bench_score": 0.8962,
+    "weights": {
+      "faithfulness": 0.3,
+      "citation_precision": 0.25,
+      "fact_coverage": 0.2,
+      "abstention_accuracy": 0.15,
+      "grounding_rate": 0.1
+    }
+  },
+  "by_category": {
+    "abstain": {
+      "cases": 8,
+      "answered": 8,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0,
+      "abstention_accuracy": 0.0
+    },
+    "citation-trap": {
+      "cases": 8,
+      "answered": 8,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.775,
+      "grounding_rate": 0.8167,
+      "distractor_avoidance": 0.0,
+      "abstention_accuracy": 1.0
+    },
+    "counterfactual": {
+      "cases": 10,
+      "answered": 10,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0,
+      "abstention_accuracy": 1.0
+    },
+    "faithful": {
+      "cases": 14,
+      "answered": 14,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.756,
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0,
+      "abstention_accuracy": 1.0
+    }
+  },
+  "case_scores": [
+    {
+      "case_id": "xh-001",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-002",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-003",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-004",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-005",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-006",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-007",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-008",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-009",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-010",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-011",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-012",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-013",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-014",
+      "category": "faithful",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-015",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8333,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-016",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-017",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8333,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-018",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8333,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-019",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-020",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8333,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-021",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-022",
+      "category": "citation-trap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.75,
+      "cited_claims": 4,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 0.8,
+      "distractor_avoidance": 0.0
+    },
+    {
+      "case_id": "xh-023",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-024",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-025",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-026",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-027",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-028",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-029",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-030",
+      "category": "abstain",
+      "abstained": false,
+      "abstention_correct": 0.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-031",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-032",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-033",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-034",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-035",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-036",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-037",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-038",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-039",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-040",
+      "category": "counterfactual",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.6667,
+      "cited_claims": 3,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    }
+  ],
+  "counterfactual_scores": [
+    {
+      "case_id": "xh-031",
+      "cf_id": "cf-1",
+      "cf_type": "swap_number",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-032",
+      "cf_id": "cf-1",
+      "cf_type": "negate",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-033",
+      "cf_id": "cf-1",
+      "cf_type": "remove",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "affected fact absent from perturbed answer",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-034",
+      "cf_id": "cf-1",
+      "cf_type": "swap_number",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-035",
+      "cf_id": "cf-1",
+      "cf_type": "negate",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-036",
+      "cf_id": "cf-1",
+      "cf_type": "remove",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "affected fact absent from perturbed answer",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-037",
+      "cf_id": "cf-1",
+      "cf_type": "swap_number",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-038",
+      "cf_id": "cf-1",
+      "cf_type": "negate",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-039",
+      "cf_id": "cf-1",
+      "cf_type": "swap_number",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "old fact gone and perturbed fact stated",
+      "abstained_on_perturbed": false
+    },
+    {
+      "case_id": "xh-040",
+      "cf_id": "cf-1",
+      "cf_type": "remove",
+      "passed": true,
+      "faithfulness": 1.0,
+      "detail": "affected fact absent from perturbed answer",
+      "abstained_on_perturbed": false
+    }
+  ]
+}
