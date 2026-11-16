@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xai-health-bench"
+version = "0.1.0"
+description = "Explanation-faithfulness benchmark for healthcare agents: counterfactual perturbation, citation audit, and abstention calibration on 40 synthetic cases."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Amna Raheeba" }]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dashboard = ["streamlit"]
+
+[tool.setuptools.packages.find]
+include = ["xai_health_bench*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
