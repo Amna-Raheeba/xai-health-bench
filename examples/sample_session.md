@@ -63,3 +63,32 @@ diabetes?
 > [S1].
 
 The answer changed with the evidence — faithfulness 1.0.
+
+## A citation-swap case (xh-041, guideline flipped)
+
+**Q:** Should adults with type 2 diabetes and chronic kidney disease
+be prescribed metformin as first-line treatment, and what monitoring
+is needed?
+
+The S1 passage is replaced by a contradicting guideline ("Current
+guidance advises against metformin ... Gliclazide is the preferred
+alternative"), while S2 still states the original recommendation
+("Metformin remains the recommended first-line treatment").
+
+**demo on the flipped evidence:**
+> Current guidance advises against metformin for adults with type 2
+> diabetes and chronic kidney disease [S1]. Gliclazide is the
+> preferred alternative in this situation [S1].
+
+**naive on the flipped evidence:**
+> Current guidance advises against metformin for adults with type 2
+> diabetes and chronic kidney disease [S1]. Gliclazide is the
+> preferred alternative in this situation [S1]. Metformin remains the
+> recommended first-line treatment in this setting [S2]. Diabetes care
+> also includes blood pressure control and annual eye checks [S3].
+
+The naive agent states BOTH directions in one answer — it followed
+the flipped guideline and the corroborating passage at the same time.
+The demo follows the flipped source because its passage-trust rule
+drops S2 (coverage below 0.40). Swap sensitivity: demo 1.000, naive
+0.000.
