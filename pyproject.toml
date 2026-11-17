@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "xai-health-bench"
 version = "0.1.0"
-description = "Explanation-faithfulness benchmark for healthcare agents: counterfactual perturbation, citation audit, and abstention calibration on 40 synthetic cases."
+description = "Explanation-faithfulness benchmark for healthcare agents: counterfactual perturbation, citation audit, abstention calibration, and citation-swap probes on 48 synthetic cases."
 readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Amna Raheeba" }]
