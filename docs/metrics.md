@@ -62,7 +62,44 @@ on the perturbed evidence:
 
 `faithfulness` is the mean pass rate over all perturbations.
 
-## 3. Composite: bench_score
+## 3. Citation-swap probe (swap sensitivity)
+
+For each probe, the agent is re-run on the case with one supporting
+passage replaced by a **contradicting guideline** — a directive
+reversal ("advises against X; use Y instead"), not a negated finding.
+The original recommendation survives in a corroborating passage, so
+the agent faces a genuine conflict between two passages.
+
+- **Pass** when the agent abstained (refusing to assert a superseded
+  recommendation is faithful) or when the original recommendation is
+  absent from the new answer AND the contradicting recommendation is
+  stated.
+- **Fail** otherwise — including the classic failure of stating both
+  directions at once (`stated_both`), recorded in the probe result.
+
+`swap_sensitivity` is the mean pass rate over all probes. It is
+reported **separately and is NOT part of `bench_score`**: it measures
+a different failure (conflict handling) from the composite's
+explanation-quality mix, and the composite's published numbers must
+stay comparable.
+
+How it differs from a `negate` counterfactual: a `negate` removes or
+reverses one finding and the original is gone everywhere, so any
+agent that copies evidence passes. A swap probe keeps the original
+alive in a second passage — an agent that copies everything passes
+the counterfactual and fails the probe. Measured 2026-11-17: demo
+1.000 (8/8), naive 0.000, confident 0.000.
+
+The probe only discriminates because the dataset is curated to a
+coverage split, enforced by the builder (`scripts/build_dataset.py`):
+the flipped passage and the target passage sit at or above 0.40
+question coverage (so the demo's passage-trust rule follows them),
+while every corroborating sentence stating the original fact sits
+below 0.40 (so the demo drops it). A differently curated dataset
+could move that split — the probe measures conflict handling on this
+corpus, not general contradiction detection.
+
+## 4. Composite: bench_score
 
 ```
 bench_score = 0.30 * faithfulness
@@ -77,7 +114,7 @@ explanation quality (faithfulness + citation precision = 0.55) above
 answer completeness (fact coverage = 0.20), because this bench exists
 to score explanations, not answers.
 
-## 4. Honest limits
+## 5. Honest limits
 
 - **Lexical proxy.** Fact presence and citation support are token
   checks. A correct paraphrase can score 0 on fact coverage, and a
@@ -85,14 +122,21 @@ to score explanations, not answers.
   score 1. An LLM-based agent would score lower here than an
   extractive one for this reason — that is a limitation of the bench,
   not of the agent.
-- **Small dataset.** 40 hand-written cases. Differences smaller than
+- **Small dataset.** 48 hand-written cases. Differences smaller than
   ~0.05 on any metric are noise, not signal.
 - **Reference agent ceiling.** The demo agent scores 1.000 because it
   was co-designed with the dataset. Treat 1.000 as "the bench is
   solvable", and judge the bench by whether it ranks the baselines
-  correctly (naive 0.970, confident 0.896).
+  correctly (naive 0.975, confident 0.905).
 - **Extractive agents are trivially faithful.** An agent that copies
   evidence verbatim passes every counterfactual by construction, so
   faithfulness alone cannot separate agents. The bench's
   discrimination comes from citation precision, abstention accuracy,
-  and distractor avoidance together.
+  and distractor avoidance together — plus swap sensitivity, the one
+  metric that separates the agents on its own.
+- **Swap probes are single-flip and curated.** Each probe flips
+  exactly one passage with a hand-written contradicting sentence, and
+  the probe discriminates only because the corroborating passage is
+  curated below the 0.40 coverage line. The numbers (demo 1.000,
+  naive 0.000, confident 0.000) prove the probe works on this corpus;
+  they do not prove a general contradiction detector.

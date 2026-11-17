@@ -15,19 +15,21 @@ insufficient (abstention calibration).
 
 ```mermaid
 flowchart LR
-    D[Dataset: 40 synthetic cases] --> S[Scorer]
+    D[Dataset: 48 synthetic cases] --> S[Scorer]
     S --> A[Agent: demo / naive / confident]
     A --> M[Metrics]
     M --> R[Report: JSON + Markdown]
     S --> C[Counterfactual runs]
     C --> M
+    S --> P[Citation-swap probes]
+    P --> M
 ```
 
 1. **Dataset** (`xai_health_bench/dataset.py`): loads and validates
    `datasets/xai_health.jsonl`. One case = a question, 2–3 synthetic
    evidence passages, expected facts (each tied to one passage),
-   distractor facts, an abstain flag, and optional counterfactual
-   perturbations.
+   distractor facts, an abstain flag, optional counterfactual
+   perturbations, and optional citation-swap probes.
 2. **Agents** (`xai_health_bench/agents.py`): three deterministic,
    standard-library agents sharing one interface. The demo agent is
    selective answering (BM25 retrieval → lexical verification →
@@ -38,8 +40,9 @@ flowchart LR
 3. **Metrics** (`xai_health_bench/metrics.py`): lexical, deterministic
    scores — see `docs/metrics.md`.
 4. **Scorer** (`xai_health_bench/scorer.py`): runs every case
-   unperturbed, then re-runs every counterfactual perturbation, and
-   aggregates.
+   unperturbed, then re-runs every counterfactual perturbation and
+   every swap probe, and aggregates. Swap sensitivity is reported
+   separately and is not part of `bench_score`.
 5. **Report** (`xai_health_bench/report.py`): JSON + Markdown, plus a
    per-agent comparison table.
 
@@ -69,4 +72,6 @@ platform's format. The bench's own metrics travel in the adapter's
   on its own bench. That is a ceiling check — proof the bench is
   solvable by a careful agent — not evidence about real-world
   performance. The bench's discriminating power is shown by the
-  baselines: naive 0.970, confident 0.896.
+  baselines: naive 0.975, confident 0.905 — and by swap sensitivity,
+  the one metric that separates the agents on its own (demo 1.000,
+  naive 0.000, confident 0.000).

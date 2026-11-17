@@ -5,14 +5,17 @@
 **Question:** does the bench rank the three agents demo > naive >
 confident, and does each metric catch the failure it is meant to catch?
 
-**Result:** demo 1.000, naive 0.970, confident 0.896 on bench_score.
-Naive fails exactly the 8 abstain cases and all 8 citation-trap
-cases. Confident fails citation precision on every case (its invented
-"94%" statistic is caught by the numbers check). Faithfulness is
-1.000 for all three agents — extractive agents are trivially faithful
-to whatever text they copy, so faithfulness alone cannot separate
-them; the bench's discrimination comes from citation precision,
-abstention accuracy, and distractor avoidance.
+**Result:** demo 1.000, naive 0.970, confident 0.896 on bench_score
+(the original 40-case run; re-measured at 48 cases in Experiment 04
+as demo 1.000, naive 0.975, confident 0.905 — the 8 added swap cases
+are answerable, so they dilute the baselines' abstain/trap failures
+slightly). Naive fails exactly the 8 abstain cases and all 8
+citation-trap cases. Confident fails citation precision on every case
+(its invented "94%" statistic is caught by the numbers check).
+Faithfulness is 1.000 for all three agents — extractive agents are
+trivially faithful to whatever text they copy, so faithfulness alone
+cannot separate them; the bench's discrimination comes from citation
+precision, abstention accuracy, and distractor avoidance.
 
 **Bugs found by this experiment (all fixed, with regression tests):**
 
@@ -67,3 +70,34 @@ passage changes their answer by construction. The counterfactual
 metric exists to catch an agent that answers from memorised knowledge
 or a fixed template instead of the evidence; the protocol works, and
 the discrimination lives in the other metrics.
+
+## Experiment 04 — citation-swap probe (2026-11-17)
+
+**Question:** when a supporting passage is replaced by a
+contradicting guideline, does the agent follow the flipped source —
+or copy both passages and assert both directions at once?
+
+**Result:** demo 1.000 (8/8 probes moved), naive 0.000, confident
+0.000 (both stated BOTH directions on all 8 probes). The probe is the
+only metric in the bench that separates the agents on its own:
+faithfulness is 1.000 for all three, because extractive agents copy
+whatever evidence they are given. The demo moves because its
+passage-trust rule drops the corroborating passage (coverage below
+0.40) and follows the flipped guideline; the extractive agents copy
+the flipped passage and the corroboration side by side.
+
+**Dataset curation behind the result (enforced by the builder, not
+assumed):** for every probe the target passage and the swapped text
+sit at or above 0.40 question coverage, every corroborating sentence
+stating the original fact sits below 0.40, the affected fact is
+absent from the swapped text (checked lexically — three cases needed
+rewording before they passed: xh-044's S1, xh-045's swapped text, and
+xh-047's S1 all sat below 0.40 until their sentences were made to
+echo the question more closely), and at least one corroborating
+sentence exists (otherwise the probe degenerates into a `negate`
+counterfactual). Two smaller gaps were fixed in the same pass: the
+threshold-sweep and sensitivity notebooks wrote CSVs with CRLF line
+endings (the csv module's default), which differed from the committed
+LF files — both now set `lineterminator="\n"` — and the dashboard's
+`use_container_width=True` was replaced with `width="stretch"` after
+Streamlit deprecated it.

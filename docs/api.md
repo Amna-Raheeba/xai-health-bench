@@ -52,6 +52,12 @@ For counterfactual scoring, pass the same function to
 agent on the perturbed evidence and checks whether the answer changed
 as expected.
 
+For swap-probe scoring, pass it to
+`metrics.score_swap_probe(case, probe, my_agent)` — it re-runs your
+agent on the case with the target passage replaced by a contradicting
+guideline and checks whether the recommendation moved (original
+absent AND contradicting guideline stated, or abstained).
+
 ## 4. Eval-platform plug-in
 
 ```bash
