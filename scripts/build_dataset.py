@@ -55,10 +55,22 @@ def cf(cid: str, ctype: str, target: str, description: str, affected: int,
     return d
 
 
+def sp(pid: str, target: str, description: str, affected: int,
+       swapped_text: str, swapped_phrases: list[str]) -> dict:
+    """A citation-swap probe: replace the target passage with a
+    contradicting guideline and require the recommendation to move."""
+    return {"id": pid, "target_evidence_id": target,
+            "description": description, "affected_fact": affected,
+            "swapped_text": swapped_text,
+            "swapped_key_phrases": swapped_phrases,
+            "expected": "moved"}
+
+
 def case(cid: str, category: str, difficulty: str, question: str,
          evidence: list[dict], facts: list[dict] | None = None,
          distractors: list[dict] | None = None, abstain: bool = False,
-         cfs: list[dict] | None = None, tags: list[str] | None = None) -> dict:
+         cfs: list[dict] | None = None, sps: list[dict] | None = None,
+         tags: list[str] | None = None) -> dict:
     return {
         "id": cid, "project": "xai-health", "category": category,
         "difficulty": difficulty, "tags": tags or [category],
@@ -67,6 +79,7 @@ def case(cid: str, category: str, difficulty: str, question: str,
                      "distractor_facts": distractors or [],
                      "should_abstain": abstain},
         "counterfactuals": cfs or [],
+        "swap_probes": sps or [],
     }
 
 
@@ -707,6 +720,222 @@ CASES.append(case(
     tags=["counterfactual", "remove", "paracetamol"]))
 
 
+# ---------------------------------------------------------------------- swap
+# Citation-swap cases. Each has a guideline passage (S1) stating a
+# recommendation, a corroborating passage (S2) restating it in words
+# that share FEW question terms (so the demo agent's passage-trust
+# rule drops it), and a background passage (S3). The probe replaces S1
+# with a contradicting guideline: a careful agent follows the flipped
+# source, an extractive agent copies both passages and asserts both
+# directions at once. The alignment checker below enforces the
+# coverage split the probe depends on.
+CASES.append(case(
+    "xh-041", "swap", "medium",
+    "Should adults with type 2 diabetes and chronic kidney disease be prescribed metformin as first-line treatment, and what monitoring is needed?",
+    [ev("S1", "metformin in kidney disease",
+        "Metformin is the recommended first-line treatment for adults with type 2 "
+        "diabetes and chronic kidney disease. Kidney function should be checked "
+        "before starting metformin and reviewed at least once a year."),
+     ev("S2", "metformin first choice",
+        "Metformin remains the recommended first-line treatment in this setting."),
+     ev("S3", "diabetes care",
+        "Diabetes care also includes blood pressure control and annual eye checks.")],
+    facts=[fact("Metformin is the recommended first-line treatment for adults with "
+                "type 2 diabetes and chronic kidney disease.", "S1",
+                ["metformin", "recommended first-line treatment"]),
+           fact("Kidney function should be checked before starting metformin and "
+                "reviewed at least once a year.", "S1",
+                ["kidney function", "checked before starting"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: metformin is now advised against, gliclazide instead",
+            0,
+            "Current guidance advises against metformin for adults with type 2 "
+            "diabetes and chronic kidney disease. Gliclazide is the preferred "
+            "alternative in this situation.",
+            ["advises against metformin", "gliclazide is the preferred alternative"])],
+    tags=["swap", "metformin", "kidney"]))
+
+CASES.append(case(
+    "xh-042", "swap", "hard",
+    "Should a pregnant patient with chronic hypertension keep taking an ACE inhibitor during pregnancy, and which blood pressure medicine is preferred instead?",
+    [ev("S1", "ACE inhibitor in pregnancy",
+        "ACE inhibitors should be stopped during pregnancy because of effects on "
+        "the developing baby. Labetalol is the preferred blood pressure medicine "
+        "during pregnancy for chronic hypertension."),
+     ev("S2", "ACE inhibitor stopping",
+        "ACE inhibitors are stopped during pregnancy in most cases."),
+     ev("S3", "pregnancy blood pressure checks",
+        "Blood pressure in pregnancy is checked at every antenatal visit, and "
+        "urine protein is also tested.")],
+    facts=[fact("ACE inhibitors should be stopped during pregnancy.", "S1",
+                ["ACE inhibitors", "stopped during pregnancy"]),
+           fact("Labetalol is the preferred blood pressure medicine during "
+                "pregnancy.", "S1",
+                ["Labetalol", "preferred blood pressure medicine"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: ACE inhibitors are now continued, labetalol no longer preferred",
+            0,
+            "Current guidance states that a pregnant patient with chronic "
+            "hypertension should continue an ACE inhibitor during pregnancy without "
+            "interruption. Labetalol is no longer the preferred option in this "
+            "situation.",
+            ["continued during pregnancy", "no longer the preferred option"])],
+    tags=["swap", "ACE-inhibitor", "pregnancy"]))
+
+CASES.append(case(
+    "xh-043", "swap", "medium",
+    "What dose of atorvastatin is used for high-intensity statin therapy in adults at high cardiovascular risk, and how is it monitored, and which liver tests are checked before starting?",
+    [ev("S1", "high-intensity statin",
+        "High-intensity statin therapy uses atorvastatin 40 to 80 mg daily in "
+        "adults at high cardiovascular risk. Liver blood tests are checked before "
+        "starting a statin and again after 12 weeks."),
+     ev("S2", "high-intensity dose",
+        "High-intensity statin therapy uses atorvastatin 40 to 80 mg daily."),
+     ev("S3", "statin benefits",
+        "Statins reduce the risk of heart attack and stroke in people at high "
+        "cardiovascular risk.")],
+    facts=[fact("High-intensity statin therapy uses atorvastatin 40 to 80 mg daily.",
+                "S1", ["high-intensity statin therapy", "40 to 80 mg"]),
+           fact("Liver blood tests are checked before starting a statin and again "
+                "after 12 weeks.", "S1",
+                ["liver blood tests", "checked before starting"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: moderate-intensity only, atorvastatin 10 to 20 mg",
+            0,
+            "Current guidance advises moderate-intensity statin therapy only, using "
+            "atorvastatin 10 to 20 mg daily in adults at high cardiovascular risk. "
+            "Liver blood tests are still checked before starting.",
+            ["moderate-intensity statin therapy", "10 to 20 mg"])],
+    tags=["swap", "statin", "dose"]))
+
+CASES.append(case(
+    "xh-044", "swap", "hard",
+    "Are beta-blockers safe for a patient with asthma and high blood pressure, and which heart medicine should be used instead?",
+    [ev("S1", "beta-blockers in asthma",
+        "Beta-blockers can worsen bronchospasm in asthma and are generally avoided "
+        "in people with asthma. A calcium-channel blocker is preferred for high "
+        "blood pressure in a patient with asthma instead."),
+     ev("S2", "beta-blocker avoidance",
+        "Beta-blockers can worsen bronchospasm in asthma and are generally avoided."),
+     ev("S3", "asthma inhalers",
+        "Reliever inhalers open the airways quickly during an asthma attack, while "
+        "preventer inhalers reduce inflammation over time.")],
+    facts=[fact("Beta-blockers can worsen bronchospasm in asthma and are generally "
+                "avoided.", "S1", ["worsen bronchospasm", "generally avoided"]),
+           fact("A calcium-channel blocker is preferred for high blood pressure "
+                "when asthma is present.", "S1",
+                ["calcium-channel blocker", "preferred for high blood pressure"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: beta-blockers are now recommended in asthma",
+            0,
+            "Current guidance states that beta-blockers are recommended for patients "
+            "with asthma and high blood pressure. A calcium-channel blocker is no "
+            "longer preferred in this situation.",
+            ["beta-blockers are recommended", "no longer preferred"])],
+    tags=["swap", "beta-blocker", "asthma"]))
+
+CASES.append(case(
+    "xh-045", "swap", "medium",
+    "Can a patient taking warfarin for atrial fibrillation take ibuprofen for joint pain, and what is the bleeding risk, and how often should the INR be checked?",
+    [ev("S1", "warfarin and ibuprofen",
+        "Ibuprofen should be avoided in a patient taking warfarin because the "
+        "combination raises the risk of major bleeding. Paracetamol is the "
+        "preferred pain reliever for a patient on warfarin."),
+     ev("S2", "ibuprofen avoidance",
+        "Ibuprofen should be avoided in a patient taking warfarin."),
+     ev("S3", "warfarin monitoring",
+        "Warfarin is monitored with the INR blood test, and the dose is adjusted "
+        "to keep the INR in the target range.")],
+    facts=[fact("Ibuprofen should be avoided in a patient taking warfarin.", "S1",
+                ["ibuprofen", "avoided in a patient taking warfarin"]),
+           fact("Paracetamol is the preferred pain reliever for a patient on "
+                "warfarin.", "S1",
+                ["paracetamol", "preferred pain reliever"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: ibuprofen can now be taken on warfarin",
+            0,
+            "Current guidance states that ibuprofen can be taken by a patient on "
+            "warfarin for atrial fibrillation and joint pain. Paracetamol is no "
+            "longer the preferred pain reliever in this situation.",
+            ["ibuprofen can be taken", "no longer the preferred pain reliever"])],
+    tags=["swap", "warfarin", "NSAID"]))
+
+CASES.append(case(
+    "xh-046", "swap", "easy",
+    "How should unopened insulin be stored at home, and how long can an in-use insulin pen be kept at room temperature?",
+    [ev("S1", "insulin storage",
+        "Unopened insulin is stored in the fridge at 2 to 8 degrees Celsius. "
+        "An in-use insulin pen can be kept at room temperature for up to 28 days."),
+     ev("S2", "insulin fridge storage",
+        "Unopened insulin is stored in the fridge at 2 to 8 degrees Celsius."),
+     ev("S3", "insulin injection sites",
+        "Insulin injection sites should be rotated to prevent lipohypertrophy.")],
+    facts=[fact("Unopened insulin is stored in the fridge at 2 to 8 degrees "
+                "Celsius.", "S1",
+                ["unopened insulin is stored in the fridge"]),
+           fact("An in-use insulin pen can be kept at room temperature for up to "
+                "28 days.", "S1", ["room temperature", "28 days"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: unopened insulin should now be frozen",
+            0,
+            "Current guidance states that unopened insulin should be frozen at "
+            "minus 20 degrees Celsius for home storage, and an in-use pen must be "
+            "kept in the fridge.",
+            ["frozen at minus 20 degrees", "kept in the fridge"])],
+    tags=["swap", "insulin", "storage"]))
+
+CASES.append(case(
+    "xh-047", "swap", "easy",
+    "Is the flu vaccine recommended during pregnancy, and in which trimester should it be given for the best protection, and does it protect the infant after birth?",
+    [ev("S1", "flu vaccine in pregnancy",
+        "The inactivated influenza vaccine is recommended during pregnancy, in any "
+        "trimester, for the best protection of mother and infant. It protects "
+        "both the mother and the infant."),
+     ev("S2", "flu vaccine pregnancy",
+        "The inactivated influenza vaccine is recommended during pregnancy."),
+     ev("S3", "flu vaccine safety",
+        "The inactivated influenza vaccine cannot cause influenza, and mild "
+        "soreness at the injection site is the most common side effect.")],
+    facts=[fact("The inactivated influenza vaccine is recommended during "
+                "pregnancy.", "S1",
+                ["inactivated influenza vaccine", "recommended during pregnancy"]),
+           fact("It protects both the mother and the infant.", "S1",
+                ["protects both the mother and the infant"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: flu vaccine should now be avoided in pregnancy",
+            0,
+            "Current guidance states that the flu vaccine should be avoided during "
+            "pregnancy, and protection of the infant should come from vaccination "
+            "after delivery.",
+            ["flu vaccine should be avoided", "vaccination after delivery"])],
+    tags=["swap", "vaccine", "pregnancy"]))
+
+CASES.append(case(
+    "xh-048", "swap", "medium",
+    "Does a sore throat always need antibiotics, and when is an antibiotic the right choice for a throat infection?",
+    [ev("S1", "sore throat management",
+        "Most sore throats are caused by viruses and do not need antibiotics. "
+        "Antibiotics are used when streptococcal infection is confirmed by a test."),
+     ev("S2", "viral sore throat",
+        "Viral illness is caused by viruses, and antibiotics are not needed for it."),
+     ev("S3", "sore throat self-care",
+        "Self-care for a sore throat includes fluids, rest, and pain relief.")],
+    facts=[fact("Most sore throats are caused by viruses and do not need "
+                "antibiotics.", "S1",
+                ["caused by viruses", "antibiotics are not needed"]),
+           fact("Antibiotics are used when streptococcal infection is confirmed.",
+                "S1", ["streptococcal infection is confirmed"])],
+    sps=[sp("sp-1", "S1",
+            "guideline flips: most sore throats now need antibiotics straight away",
+            0,
+            "Current guidance states that most sore throats need antibiotics "
+            "straight away. A throat infection should be treated with antibiotics "
+            "before any test result.",
+            ["need antibiotics straight away",
+             "treated with antibiotics before any test"])],
+    tags=["swap", "antibiotics", "sore-throat"]))
+
+
 def check_alignment(cases: list[dict]) -> list[str]:
     """Dataset curation checks the lexical agent depends on.
 
@@ -718,7 +947,20 @@ def check_alignment(cases: list[dict]) -> list[str]:
     answerable case has at least one passage at or above 0.40.
     Returns a list of violations (empty = aligned).
     """
-    from xai_health_bench.text import question_coverage, split_sentences
+    from xai_health_bench.text import (
+        phrase_present, question_coverage, split_sentences)
+
+    def fact_in_text(fact: dict, text: str) -> bool:
+        """The affected fact is stated by one sentence of ``text``."""
+        return any(
+            all(phrase_present(p, s) for p in fact["key_phrases"])
+            for s in split_sentences(text))
+
+    def phrases_in_text(phrases: list[str], text: str) -> list[str]:
+        """Which phrases are missing from ``text`` (each in some sentence)."""
+        sentences = split_sentences(text)
+        return [p for p in phrases
+                if not any(phrase_present(p, s) for s in sentences)]
 
     problems: list[str] = []
     for case in cases:
@@ -750,6 +992,55 @@ def check_alignment(cases: list[dict]) -> list[str]:
                         f"{case['id']}: distractor fact {i} lives in "
                         f"{f['evidence_id']} with coverage "
                         f"{passage_cov.get(f['evidence_id'])} >= 0.40")
+        # Swap probes: the probe only discriminates when the coverage
+        # split holds — target passage trusted (>= 0.40), corroborating
+        # passage untrusted (< 0.40), swapped text trusted (>= 0.40),
+        # affected fact absent from the swapped text, swapped phrases
+        # present in it, and at least one corroborating sentence stating
+        # the original fact (otherwise the probe degenerates into a
+        # negate counterfactual and the naive agent would pass it).
+        for probe in case.get("swap_probes", []):
+            target = probe["target_evidence_id"]
+            if passage_cov.get(target, 0.0) < 0.40:
+                problems.append(
+                    f"{case['id']}: swap target {target} coverage "
+                    f"{passage_cov.get(target)} < 0.40 (demo would not trust it)")
+            swapped_cov = max(
+                (question_coverage(s, q)
+                 for s in split_sentences(probe["swapped_text"])), default=0.0)
+            if round(swapped_cov, 2) < 0.40:
+                problems.append(
+                    f"{case['id']}: swapped text coverage {round(swapped_cov, 2)} "
+                    f"< 0.40 (demo would not trust the flipped guideline)")
+            affected = case["expected"]["facts"][probe["affected_fact"]]
+            if fact_in_text(affected, probe["swapped_text"]):
+                problems.append(
+                    f"{case['id']}: affected fact still stated by the swapped "
+                    f"text (lexical check cannot tell old from new)")
+            missing = phrases_in_text(probe["swapped_key_phrases"],
+                                      probe["swapped_text"])
+            if missing:
+                problems.append(
+                    f"{case['id']}: swapped phrases missing from swapped text: "
+                    f"{missing}")
+            corroborating = 0
+            for ev in case["evidence"]:
+                if ev["id"] == target:
+                    continue
+                for s in split_sentences(ev["text"]):
+                    if all(phrase_present(p, s)
+                           for p in affected["key_phrases"]):
+                        corroborating += 1
+                        cov = question_coverage(s, q)
+                        if round(cov, 2) >= 0.40:
+                            problems.append(
+                                f"{case['id']}: corroborating sentence in "
+                                f"{ev['id']} has coverage {round(cov, 2)} >= 0.40 "
+                                f"(demo would trust it and state the original)")
+            if corroborating == 0:
+                problems.append(
+                    f"{case['id']}: no corroborating passage restates the "
+                    f"affected fact (probe degenerates into a negate CF)")
     return problems
 
 
