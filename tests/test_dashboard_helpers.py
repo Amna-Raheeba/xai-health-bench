@@ -14,10 +14,12 @@ def _demo_report():
 def test_overview_shapes_metrics():
     ov = helpers.overview(_demo_report())
     assert ov["agent"] == "demo"
-    assert ov["cases"] == 40
-    assert len(ov["metrics"]) == 7
+    assert ov["cases"] == 48
+    assert len(ov["metrics"]) == 8
     bench = [m for m in ov["metrics"] if m["key"] == "bench_score"][0]
     assert bench["value"] == 1.0
+    swap = [m for m in ov["metrics"] if m["key"] == "swap_sensitivity"][0]
+    assert swap["value"] == 1.0
 
 
 def test_overview_empty_report():
@@ -37,7 +39,7 @@ def test_comparison_rows():
 
 def test_case_rows_count_and_fields():
     rows = helpers.case_rows(_demo_report())
-    assert len(rows) == 40
+    assert len(rows) == 48
     assert all("case_id" in r and "category" in r for r in rows)
     abstain_rows = [r for r in rows if r["category"] == "abstain"]
     assert len(abstain_rows) == 8
@@ -50,10 +52,25 @@ def test_counterfactual_rows():
     assert all(r["passed"] is True for r in rows)
 
 
+def test_swap_probe_rows():
+    demo_rows = helpers.swap_probe_rows(_demo_report())
+    assert len(demo_rows) == 8
+    assert all(r["passed"] is True for r in demo_rows)
+    assert all(r["stated_both"] is False for r in demo_rows)
+    naive_rows = helpers.swap_probe_rows(scorer.run_bench("naive"))
+    assert len(naive_rows) == 8
+    assert all(r["passed"] is False for r in naive_rows)
+    assert all(r["stated_both"] is True for r in naive_rows)
+
+
+def test_swap_probe_rows_empty_report():
+    assert helpers.swap_probe_rows({}) == []
+
+
 def test_category_rows():
     rows = helpers.category_rows(_demo_report())
     assert [r["category"] for r in rows] == [
-        "abstain", "citation-trap", "counterfactual", "faithful"]
+        "abstain", "citation-trap", "counterfactual", "faithful", "swap"]
     assert all(r["cases"] > 0 for r in rows)
 
 

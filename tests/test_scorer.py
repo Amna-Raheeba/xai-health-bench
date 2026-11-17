@@ -11,10 +11,13 @@ def test_run_bench_demo_scores_perfectly_on_reference():
     report = scorer.run_bench("demo")
     agg = report["aggregate"]
     assert agg["bench_score"] == 1.0
-    assert agg["cases"] == 40
+    assert agg["cases"] == 48
     assert agg["counterfactuals"] == 10
-    assert len(report["case_scores"]) == 40
+    assert agg["swap_probes"] == 8
+    assert agg["swap_sensitivity"] == 1.0
+    assert len(report["case_scores"]) == 48
     assert len(report["counterfactual_scores"]) == 10
+    assert len(report["swap_probe_scores"]) == 8
 
 
 def test_run_bench_ranking_demo_naive_confident():
@@ -34,7 +37,7 @@ def test_run_bench_naive_fails_all_abstain_cases():
 def test_run_bench_by_category_covers_all_categories():
     report = scorer.run_bench("demo")
     assert set(report["by_category"]) == {
-        "faithful", "citation-trap", "abstain", "counterfactual"}
+        "faithful", "citation-trap", "abstain", "counterfactual", "swap"}
 
 
 def test_save_and_load_report_roundtrip(tmp_path):
@@ -58,4 +61,5 @@ def test_render_comparison_orders_agents():
     naive = scorer.run_bench("naive")
     text = render_comparison([demo, naive])
     assert "| Metric | demo | naive |" in text
-    assert "bench_score | 1.000 | 0.970" in text
+    assert "bench_score | 1.000 | 0.975" in text
+    assert "swap_sensitivity | 1.000 | 0.000" in text

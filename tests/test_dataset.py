@@ -18,12 +18,14 @@ DATASET = ROOT / "datasets" / "xai_health.jsonl"
 
 def test_dataset_loads_and_counts():
     cases = load_dataset(DATASET)
-    assert len(cases) == 40
+    assert len(cases) == 48
     summary = dataset_summary(cases)
     assert summary["by_category"] == {
-        "faithful": 14, "citation-trap": 8, "abstain": 8, "counterfactual": 10}
-    assert summary["facts"] == 47
+        "faithful": 14, "citation-trap": 8, "abstain": 8, "counterfactual": 10,
+        "swap": 8}
+    assert summary["facts"] == 63
     assert summary["counterfactuals"] == 10
+    assert summary["swap_probes"] == 8
     assert summary["abstain_cases"] == 8
 
 

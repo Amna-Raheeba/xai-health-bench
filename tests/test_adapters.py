@@ -52,7 +52,7 @@ def test_export_script_produces_eval_platform_dataset(tmp_path):
     assert proc.returncode == 0, proc.stderr
     assert out.exists()
     rows = [json.loads(line) for line in out.read_text(encoding="utf-8").splitlines()]
-    assert len(rows) == 40
+    assert len(rows) == 48
     row = rows[0]
     assert row["project"] == "xai-health"
     assert "case" in row["input"]
