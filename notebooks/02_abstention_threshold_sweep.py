@@ -4,14 +4,14 @@
 Question: which evidence-strength threshold should the demo agent
 abstain at?
 
-Method: run the demo agent over all 40 cases at thresholds from 0.30
+Method: run the demo agent over all 48 cases at thresholds from 0.30
 to 0.80 in steps of 0.05, and record abstention accuracy (correct
-abstain-or-answer decisions / 40) at each step. Write
+abstain-or-answer decisions / 48) at each step. Write
 ``results/threshold_sweep.csv``.
 
 Measured outcome (2026-11-17): abstain cases all score an evidence
 strength of 0.0 and the weakest answerable case scores 0.577, so every
-threshold in [0.30, 0.55] gives 40/40. The shipped default is 0.50,
+threshold in [0.30, 0.55] gives 48/48. The shipped default is 0.50,
 inside that plateau. The threshold is corpus-specific: the
 healthcare-research-agent used 0.62 on its own corpus, and copying it
 here would wrongly abstain on 3 answerable cases. Sweep, don't copy.
@@ -50,7 +50,10 @@ def main() -> None:
     out = ROOT / "results" / "threshold_sweep.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=["threshold", "correct", "accuracy", "abstained"])
+        # lineterminator="\n": the csv module's default is "\r\n", which
+        # made regenerated CSVs differ from the committed LF files.
+        writer = csv.DictWriter(fh, fieldnames=["threshold", "correct", "accuracy", "abstained"],
+                                lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     best = max(r["accuracy"] for r in rows)

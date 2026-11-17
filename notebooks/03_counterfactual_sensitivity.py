@@ -47,7 +47,10 @@ def main() -> None:
     out = ROOT / "results" / "counterfactual_sensitivity.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, fieldnames=["agent", "type", "n", "pass_rate"])
+        # lineterminator="\n": the csv module's default is "\r\n", which
+        # made regenerated CSVs differ from the committed LF files.
+        writer = csv.DictWriter(fh, fieldnames=["agent", "type", "n", "pass_rate"],
+                                lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

@@ -5,13 +5,13 @@ Question: do the three shipped agents rank in the expected order
 (demo > naive > confident), and does each metric separate the agent
 it is meant to catch?
 
-Method: run all three agents over the full 40-case dataset, save a
+Method: run all three agents over the full 48-case dataset, save a
 report JSON per agent, and assert the ranking. The assertions are the
 point: if a future change makes the bench unable to tell a
 hallucinating agent from a careful one, this notebook fails loudly.
 
 Expected outcome (measured 2026-11-17):
-- demo 1.000 > naive 0.970 > confident 0.896 on bench_score.
+- demo 1.000 > naive 0.975 > confident 0.905 on bench_score.
 - The naive agent fails exactly the 8 abstain cases (it never
   abstains) and all 8 citation-trap cases (it states every distractor).
 - The confident agent fails citation precision on every case (its
@@ -21,6 +21,9 @@ Expected outcome (measured 2026-11-17):
   alone cannot separate them — the bench's discrimination comes from
   citation precision, abstention accuracy, and distractor avoidance.
   This is a documented finding, not a bug.
+- Swap sensitivity is 1.000 for demo and 0.000 for naive and
+  confident: the demo follows the flipped guideline on all 8 swap
+  probes, while the extractive agents state both directions on all 8.
 """
 from __future__ import annotations
 
@@ -67,6 +70,11 @@ def main() -> None:
         "confident agent's invented statistic must be caught by the audit")
     assert confident["aggregate"]["citation_precision"] < \
         reports[0]["aggregate"]["citation_precision"]
+
+    swap = {r["agent"]: r["aggregate"]["swap_sensitivity"] for r in reports}
+    assert swap["demo"] == 1.0, swap
+    assert swap["naive"] == 0.0, swap
+    assert swap["confident"] == 0.0, swap
 
     print("\nVALIDATION PASSED: demo > naive > confident, "
           "and each baseline fails exactly where it should.")
