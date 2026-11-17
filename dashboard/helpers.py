@@ -28,6 +28,7 @@ METRIC_LABELS = [
     ("grounding_rate", "Grounding rate"),
     ("abstention_accuracy", "Abstention accuracy"),
     ("distractor_avoidance", "Distractor avoidance"),
+    ("swap_sensitivity", "Swap sensitivity"),
 ]
 
 
@@ -108,6 +109,18 @@ def category_rows(report: dict) -> list[dict[str, Any]]:
     for category, row in sorted((report.get("by_category") or {}).items()):
         rows.append({"category": category, **row})
     return rows
+
+
+def swap_probe_rows(report: dict) -> list[dict[str, Any]]:
+    """Per-probe rows: did the recommendation move when its source flipped?"""
+    return [
+        {"case_id": p.get("case_id"), "probe_id": p.get("probe_id"),
+         "passed": p.get("passed"),
+         "detail": p.get("detail"),
+         "abstained_on_swapped": p.get("abstained_on_swapped"),
+         "stated_both": p.get("stated_both")}
+        for p in report.get("swap_probe_scores", [])
+    ]
 
 
 def run_demo_bench() -> dict:
