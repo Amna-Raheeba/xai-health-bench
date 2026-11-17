@@ -1,0 +1,25 @@
+agent,case_id,probe_id,passed,stated_both,abstained,detail
+demo,xh-041,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-042,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-043,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-044,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-045,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-046,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-047,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+demo,xh-048,sp-1,1,0,0,original recommendation gone and contradicting guideline stated
+naive,xh-041,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-042,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-043,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-044,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-045,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-046,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-047,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+naive,xh-048,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-041,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-042,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-043,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-044,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-045,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-046,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-047,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation
+confident,xh-048,sp-1,0,1,0,agent stated BOTH the original and the contradicting recommendation

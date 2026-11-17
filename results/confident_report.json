@@ -1,20 +1,22 @@
 {
   "agent": "confident",
   "dataset": "/home/hatch/workspace/github-projects/xai-health-bench/datasets/xai_health.jsonl",
-  "cases": 40,
-  "elapsed_s": 0.094,
+  "cases": 48,
+  "elapsed_s": 0.082,
   "aggregate": {
-    "cases": 40,
-    "answered": 40,
+    "cases": 48,
+    "answered": 48,
     "abstained": 0,
     "counterfactuals": 10,
+    "swap_probes": 8,
     "faithfulness": 1.0,
-    "citation_precision": 0.7196,
+    "citation_precision": 0.733,
     "fact_coverage": 1.0,
-    "grounding_rate": 0.9633,
-    "abstention_accuracy": 0.8,
-    "distractor_avoidance": 0.8,
-    "bench_score": 0.8962,
+    "grounding_rate": 0.9694,
+    "abstention_accuracy": 0.8333,
+    "distractor_avoidance": 0.8333,
+    "swap_sensitivity": 0.0,
+    "bench_score": 0.9052,
     "weights": {
       "faithfulness": 0.3,
       "citation_precision": 0.25,
@@ -56,6 +58,15 @@
       "answered": 14,
       "fact_coverage": 1.0,
       "citation_precision": 0.756,
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0,
+      "abstention_accuracy": 1.0
+    },
+    "swap": {
+      "cases": 8,
+      "answered": 8,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
       "grounding_rate": 1.0,
       "distractor_avoidance": 1.0,
       "abstention_accuracy": 1.0
@@ -861,6 +872,166 @@
       ],
       "grounding_rate": 1.0,
       "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-041",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-042",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-043",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-044",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-045",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-046",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.14285714285714285,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-047",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
+    },
+    {
+      "case_id": "xh-048",
+      "category": "swap",
+      "abstained": false,
+      "abstention_correct": 1.0,
+      "fact_coverage": 1.0,
+      "citation_precision": 0.8,
+      "cited_claims": 5,
+      "failed_citations": [
+        {
+          "sentence": "In a large trial, 94% of patients improved within 2 days. [S1]",
+          "citation": "S1",
+          "supported": false,
+          "support_ratio": 0.0,
+          "reason": "a number in the claim does not appear in the cited source"
+        }
+      ],
+      "grounding_rate": 1.0,
+      "distractor_avoidance": 1.0
     }
   ],
   "counterfactual_scores": [
@@ -953,6 +1124,80 @@
       "faithfulness": 1.0,
       "detail": "affected fact absent from perturbed answer",
       "abstained_on_perturbed": false
+    }
+  ],
+  "swap_probe_scores": [
+    {
+      "case_id": "xh-041",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-042",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-043",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-044",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-045",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-046",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-047",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
+    },
+    {
+      "case_id": "xh-048",
+      "probe_id": "sp-1",
+      "passed": false,
+      "swap_sensitivity": 0.0,
+      "detail": "agent stated BOTH the original and the contradicting recommendation",
+      "abstained_on_swapped": false,
+      "stated_both": true
     }
   ]
 }
