@@ -24,12 +24,30 @@ Case schema (one JSON object per line in ``datasets/xai_health.jsonl``)::
          "affected_fact": 0,                 # index into expected.facts
          "perturbed_key_phrases": ["..."],   # for negate / swap_number
          "expected": "fact_absent" | "fact_changed"}
+      ],
+      "swap_probes": [
+        {"id": "sp-1",
+         "target_evidence_id": "S1", "description": "...",
+         "swapped_text": "...",              # contradicting guideline
+         "affected_fact": 0,                 # index into expected.facts
+         "swapped_key_phrases": ["..."],     # the new recommendation
+         "expected": "moved"}
       ]
     }
 
 All evidence is synthetic and hand-written for benchmarking. Every
 evidence title starts with "Synthetic summary" so no passage can be
 mistaken for a real study.
+
+A citation-swap probe differs from a counterfactual ``negate`` in
+three ways: (1) the replacement is a contradicting *guideline* — a
+directive reversal ("advises against X; use Y instead"), not a
+negated finding; (2) the original recommendation survives elsewhere
+in the evidence (a corroborating passage restates it), so the probe
+tests whether the agent follows the flipped authoritative source
+rather than copying everything and asserting both directions at once;
+(3) abstaining counts as moving — refusing to assert a superseded
+recommendation is faithful. See ``metrics.score_swap_probe``.
 """
 from __future__ import annotations
 
@@ -37,7 +55,7 @@ import copy
 import json
 from pathlib import Path
 
-CATEGORIES = ("faithful", "citation-trap", "abstain", "counterfactual")
+CATEGORIES = ("faithful", "citation-trap", "abstain", "counterfactual", "swap")
 DIFFICULTIES = ("easy", "medium", "hard")
 CF_TYPES = ("remove", "negate", "swap_number")
 
@@ -121,6 +139,20 @@ def validate_case(case: dict, lineno: int = 0) -> None:
             raise DatasetError(f"{where}: {cf['type']} counterfactual needs perturbed_key_phrases")
         if not (0 <= cf.get("affected_fact", -1) < len(expected.get("facts", []))):
             raise DatasetError(f"{where}: counterfactual affected_fact out of range")
+    for sp in case.get("swap_probes", []):
+        if sp.get("expected") != "moved":
+            raise DatasetError(f"{where}: swap probe expected must be 'moved'")
+        if sp.get("target_evidence_id") not in evidence_ids:
+            raise DatasetError(f"{where}: swap probe targets unknown evidence {sp.get('target_evidence_id')!r}")
+        if not sp.get("swapped_text") or not sp["swapped_text"].strip():
+            raise DatasetError(f"{where}: swap probe needs non-empty swapped_text")
+        if not sp.get("swapped_key_phrases") or not all(
+                isinstance(p, str) and p.strip() for p in sp["swapped_key_phrases"]):
+            raise DatasetError(f"{where}: swap probe needs non-empty swapped_key_phrases")
+        if not (0 <= sp.get("affected_fact", -1) < len(expected.get("facts", []))):
+            raise DatasetError(f"{where}: swap probe affected_fact out of range")
+        if expected.get("should_abstain"):
+            raise DatasetError(f"{where}: swap probes only make sense on answerable cases")
 
 
 def apply_counterfactual(case: dict, cf: dict) -> dict:
@@ -143,22 +175,42 @@ def apply_counterfactual(case: dict, cf: dict) -> dict:
     return perturbed
 
 
+def apply_swap_probe(case: dict, probe: dict) -> dict:
+    """Return a copy of ``case`` with one citation-swap probe applied.
+
+    The target evidence passage is replaced wholesale by the
+    contradicting guideline (``swapped_text``). Everything else —
+    including the corroborating passage that still states the original
+    recommendation — is left untouched, so the agent faces a genuine
+    conflict between two passages, not a single changed fact.
+    """
+    swapped = copy.deepcopy(case)
+    target = probe["target_evidence_id"]
+    for ev in swapped["evidence"]:
+        if ev["id"] == target:
+            ev["text"] = probe["swapped_text"]
+    return swapped
+
+
 def dataset_summary(cases: list[dict]) -> dict:
     """Counts per category / difficulty, for the README and the dashboard."""
     by_category: dict[str, int] = {c: 0 for c in CATEGORIES}
     by_difficulty: dict[str, int] = {d: 0 for d in DIFFICULTIES}
     n_facts = 0
     n_cfs = 0
+    n_sps = 0
     for case in cases:
         by_category[case["category"]] += 1
         by_difficulty[case.get("difficulty", "medium")] += 1
         n_facts += len(case["expected"].get("facts", []))
         n_cfs += len(case.get("counterfactuals", []))
+        n_sps += len(case.get("swap_probes", []))
     return {
         "cases": len(cases),
         "by_category": by_category,
         "by_difficulty": by_difficulty,
         "facts": n_facts,
         "counterfactuals": n_cfs,
+        "swap_probes": n_sps,
         "abstain_cases": sum(1 for c in cases if c["expected"].get("should_abstain")),
     }

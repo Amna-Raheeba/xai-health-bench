@@ -25,6 +25,7 @@ def render_report(report: dict) -> str:
         f"| grounding_rate | {_pct(agg['grounding_rate'])} |",
         f"| abstention_accuracy | {_pct(agg['abstention_accuracy'])} |",
         f"| distractor_avoidance | {_pct(agg['distractor_avoidance'])} |",
+        f"| swap_sensitivity (separate probe, not in bench_score) | {_pct(agg.get('swap_sensitivity'))} |",
         "",
         "Weights: " + ", ".join(f"{k}={v}" for k, v in agg["weights"].items()),
         "",
@@ -45,6 +46,15 @@ def render_report(report: dict) -> str:
     else:
         for c in failures:
             lines.append(f"- {c['case_id']} / {c['cf_id']} ({c['cf_type']}): {c['detail']}")
+    lines += ["", "## Swap-probe failures", ""]
+    swap_failures = [p for p in report.get("swap_probe_scores", []) if not p["passed"]]
+    if not report.get("swap_probe_scores"):
+        lines.append("No swap probes in this dataset.")
+    elif not swap_failures:
+        lines.append("None — every recommendation moved when its source was flipped.")
+    else:
+        for p in swap_failures:
+            lines.append(f"- {p['case_id']} / {p['probe_id']}: {p['detail']}")
     lines += ["", "## Citation failures", ""]
     failed_cites = []
     for s in report["case_scores"]:
@@ -64,7 +74,7 @@ def render_comparison(reports: list[dict]) -> str:
     """One table comparing several agents' aggregate metrics."""
     metrics = ["bench_score", "faithfulness", "citation_precision",
                "fact_coverage", "grounding_rate", "abstention_accuracy",
-               "distractor_avoidance"]
+               "distractor_avoidance", "swap_sensitivity"]
     header = "| Metric | " + " | ".join(r["agent"] for r in reports) + " |"
     lines = ["# XAI-Health Bench — agent comparison", "", header,
              "|" + "---|" * (len(reports) + 1)]

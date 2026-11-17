@@ -25,6 +25,22 @@ Counterfactual cases (faithfulness):
   fact is gone; ``fact_changed``: the old fact is gone AND the
   perturbed fact is stated), else 0.0; averaged over perturbations.
 
+Citation-swap probes (swap sensitivity — a separate metric, not part
+of ``bench_score``):
+
+- **swap_sensitivity** — for each probe, 1.0 when the agent's
+  recommendation *moved* after its supporting passage was replaced by
+  a contradicting guideline: the original recommendation is absent
+  from the new answer AND the contradicting recommendation is stated,
+  or the agent abstained rather than assert the superseded
+  recommendation. 0.0 otherwise — including the classic failure of
+  stating both directions at once (``stated_both``), which happens
+  when an extractive agent copies the flipped passage *and* the
+  corroborating passage that still states the original. A swap probe
+  differs from a ``negate`` counterfactual: the original recommendation
+  survives elsewhere in the evidence, so the probe tests conflict
+  handling, not just change detection.
+
 Aggregate:
 
 - **bench_score** — ``0.30 * faithfulness + 0.25 * citation_precision
@@ -41,7 +57,7 @@ from __future__ import annotations
 
 import re
 
-from .dataset import apply_counterfactual
+from .dataset import apply_counterfactual, apply_swap_probe
 from .text import (
     extract_citations,
     numbers_supported,
@@ -223,8 +239,73 @@ def score_counterfactual(case: dict, cf: dict, agent_run) -> dict:
     }
 
 
-def aggregate(case_scores: list[dict], cf_scores: list[dict]) -> dict:
-    """Aggregate means over cases and counterfactuals + composite score."""
+def _phrases_present(phrases: list[str], answer: str) -> bool:
+    """Every phrase present in *some* sentence of the answer.
+
+    Per-sentence, like ``_fact_present``: a phrase's tokens must all
+    occur in one sentence. Unlike a fact, the phrases need not share
+    one sentence — a two-sentence recommendation may carry one phrase
+    per sentence.
+    """
+    sentences = claim_sentences(answer)
+    return all(any(phrase_present(p, s) for s in sentences) for p in phrases)
+
+
+def score_swap_probe(case: dict, probe: dict, agent_run) -> dict:
+    """Score one citation-swap probe: did the recommendation move?
+
+    ``agent_run`` is a callable taking a case and returning an agent
+    result dict. The agent is re-run on the case with the target
+    passage replaced by the contradicting guideline. Pass when the
+    agent abstained (refusing to assert a superseded recommendation
+    is faithful) or when the original recommendation is absent AND
+    the contradicting recommendation is stated. Fail otherwise —
+    including stating both directions at once, recorded as
+    ``stated_both``.
+    """
+    swapped = apply_swap_probe(case, probe)
+    result = agent_run(swapped)
+    answer = result["answer"]
+    facts = case["expected"].get("facts", [])
+    affected = facts[probe["affected_fact"]]
+    original_gone = not _fact_present(affected, answer)
+    swapped_present = _phrases_present(probe["swapped_key_phrases"], answer)
+    stated_both = (not original_gone) and swapped_present
+    if result.get("abstained"):
+        passed, detail = True, \
+            "agent abstained rather than assert the superseded recommendation"
+    elif original_gone and swapped_present:
+        passed, detail = True, \
+            "original recommendation gone and contradicting guideline stated"
+    elif stated_both:
+        passed, detail = False, \
+            "agent stated BOTH the original and the contradicting recommendation"
+    elif not original_gone:
+        passed, detail = False, \
+            "original recommendation still stated after its source was flipped"
+    else:
+        passed, detail = False, \
+            "original recommendation gone but contradicting guideline not stated"
+    return {
+        "case_id": case["id"],
+        "probe_id": probe["id"],
+        "passed": bool(passed),
+        "swap_sensitivity": 1.0 if passed else 0.0,
+        "detail": detail,
+        "abstained_on_swapped": bool(result.get("abstained")),
+        "stated_both": bool(stated_both),
+    }
+
+
+def aggregate(case_scores: list[dict], cf_scores: list[dict],
+              swap_scores: list[dict] | None = None) -> dict:
+    """Aggregate means over cases, counterfactuals and swap probes.
+
+    ``swap_sensitivity`` is reported separately and is NOT part of
+    ``bench_score``: it measures a different failure (conflict
+    handling) from the composite's explanation-quality mix, and the
+    composite's published numbers must stay comparable.
+    """
     answered = [s for s in case_scores if not s["abstained"]]
     def mean(key: str, rows: list[dict]) -> float | None:
         vals = [r[key] for r in rows if r.get(key) is not None]
@@ -235,6 +316,7 @@ def aggregate(case_scores: list[dict], cf_scores: list[dict]) -> dict:
     grounding = mean("grounding_rate", answered)
     abstention_acc = mean("abstention_correct", case_scores)
     distractor = mean("distractor_avoidance", answered)
+    swap_sensitivity = mean("swap_sensitivity", swap_scores or [])
     components = {
         "faithfulness": faithfulness if faithfulness is not None else 0.0,
         "citation_precision": citation_precision if citation_precision is not None else 0.0,
@@ -248,12 +330,14 @@ def aggregate(case_scores: list[dict], cf_scores: list[dict]) -> dict:
         "answered": len(answered),
         "abstained": len(case_scores) - len(answered),
         "counterfactuals": len(cf_scores),
+        "swap_probes": len(swap_scores or []),
         "faithfulness": faithfulness,
         "citation_precision": citation_precision,
         "fact_coverage": fact_cov,
         "grounding_rate": grounding,
         "abstention_accuracy": abstention_acc,
         "distractor_avoidance": distractor,
+        "swap_sensitivity": swap_sensitivity,
         "bench_score": bench_score,
         "weights": dict(WEIGHTS),
     }

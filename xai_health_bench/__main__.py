@@ -43,7 +43,8 @@ def cmd_run(args) -> int:
               f"fact_coverage={agg['fact_coverage']} "
               f"abstention_accuracy={agg['abstention_accuracy']} "
               f"grounding={agg['grounding_rate']} "
-              f"distractor_avoidance={agg['distractor_avoidance']}")
+              f"distractor_avoidance={agg['distractor_avoidance']} "
+              f"swap_sensitivity={agg.get('swap_sensitivity')}")
         if args.out:
             out = Path(args.out)
             if len(agent_names) > 1:

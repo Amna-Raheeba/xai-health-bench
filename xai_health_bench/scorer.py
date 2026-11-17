@@ -24,12 +24,15 @@ def run_bench(agent_name: str, cases: list[dict] | None = None,
     agent_run = lambda case: agents.run(agent_name, case)  # noqa: E731
     case_scores = []
     cf_scores = []
+    swap_scores = []
     for case in cases:
         result = agent_run(case)
         case_scores.append(metrics.score_case(case, result))
         for cf in case.get("counterfactuals", []):
             cf_scores.append(metrics.score_counterfactual(case, cf, agent_run))
-    agg = metrics.aggregate(case_scores, cf_scores)
+        for probe in case.get("swap_probes", []):
+            swap_scores.append(metrics.score_swap_probe(case, probe, agent_run))
+    agg = metrics.aggregate(case_scores, cf_scores, swap_scores)
     by_category: dict[str, dict] = {}
     for category in sorted({s["category"] for s in case_scores}):
         rows = [s for s in case_scores if s["category"] == category]
@@ -55,6 +58,7 @@ def run_bench(agent_name: str, cases: list[dict] | None = None,
         "by_category": by_category,
         "case_scores": case_scores,
         "counterfactual_scores": cf_scores,
+        "swap_probe_scores": swap_scores,
     }
 
 
